@@ -2,37 +2,41 @@ package com.cos.blog.service;
 
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cos.blog.model.Board;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
+import com.cos.blog.repository.BoardRepository;
 import com.cos.blog.repository.UserRepository;
 
-// 스프링이 컴포넌트 스캔을 통해서 bean에 등록해줌 IoC를 해준다.
+
 @Service
-public class UserService {
+public class BoardService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private BoardRepository boardRepository;
 	
-	@Autowired
-	private BCryptPasswordEncoder encoder;
 	
 	@Transactional
-	public void 회원가입(User user) {
-			String rawPassword =user.getPassword();
-			String encPassword =encoder.encode(rawPassword);
-			user.setPassword(encPassword);
-			user.setRole(RoleType.USER);
-			userRepository.save(user);
+	public void 글쓰기(Board board,User user) {//title , content
+	    board.setCount(0);
+	    board.setUser(user);
+		boardRepository.save(board);
 	}
 	
+	public List<Board> 글목록(){
+		return boardRepository.findAll();
+	}
 	/*
 	@Transactional(readOnly=true)// Select 할 때 트랜잭션 시작되고 서비스 종료시 종료 정합성을 유지시켜줌
 	public User 로그인(User user) {
 		return userRepository.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 	}*/
+	
 }

@@ -4,34 +4,29 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.blog.config.auth.PrincipalDetail;
 import com.cos.blog.dto.ResponseDto;
+import com.cos.blog.model.Board;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
+import com.cos.blog.service.BoardService;
 import com.cos.blog.service.UserService;
 
 @RestController
-public class UserApiController {
-	
-	@Autowired
-	private UserService userService;
-	
+public class BoardApiController {
 
-	 
-	/* 
-	 * 밑에 있는 session을 이렇게도 가져올 수 있음
 	@Autowired
-	private HttpSession session;
-	*/
-	@PostMapping("/auth/joinProc")
-	public ResponseDto<Integer> save(@RequestBody User user) { //username,password,email,roletype 나머지는 db에서 알아서 들어감
-		System.out.println("UserApiController : save 호출됨");
-		//실제로 DB에 insert를 하고 아래에서 return이 되면 됌
-		userService.회원가입(user);
+	private BoardService boardService;
+	
+	@PostMapping("/api/board")
+	public ResponseDto<Integer> save(@RequestBody Board board,@AuthenticationPrincipal PrincipalDetail principal ) {
+		boardService.글쓰기(board,principal.getUser());
 		return new ResponseDto<Integer>(HttpStatus.OK.value(),1);
 	}
 	
