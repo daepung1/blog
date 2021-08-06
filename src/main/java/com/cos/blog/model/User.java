@@ -31,7 +31,7 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY) // 프로젝트에서 연결된 DB 넘버링 전략을 따라감 
 	private int id; // 시퀀스,auto_increment 넘버링 전략
 	
-	@Column(nullable = false, length =30)
+	@Column(nullable = false, length =100)
 	private String username; //아이디
 	
 	@Column(nullable = false, length =100)
@@ -43,6 +43,8 @@ public class User {
 	//@ColumnDefault("'user'")
 	@Enumerated(EnumType.STRING) //사용할곳에서User의 객체인user이고 user.setRole(RoleType.USER);
 	private RoleType role; //admin,user
+	
+    private String oauth; // kakao,google 등 구분
 	
 	@CreationTimestamp
 	private Timestamp createDate;
