@@ -9,6 +9,9 @@ let index ={
 	  $("#btn-update").on("click",()=>{ // function(){} 안쓰고 , ()=>{} 쓴 이유는 this를 바인딩하기 위해서
 		this.update();
 	});
+	  $("#btn-reply-save").on("click",()=>{ // function(){} 안쓰고 , ()=>{} 쓴 이유는 this를 바인딩하기 위해서
+		this.replySave();
+	});
 	 /*$("#btn-login").on("click",()=>{ // function(){} 안쓰고 , ()=>{} 쓴 이유는 this를 바인딩하기 위해서
 		this.login();
 	 });*/		
@@ -40,6 +43,7 @@ let index ={
 		}); 
 		
 	},*/
+	
 deleteById: function(){
        let id=$("#id").text();     
 
@@ -103,6 +107,28 @@ deleteById: function(){
 		}); 
 		
 	},			
+	replySave: function(){
+		//alert('user의 save함수 호출됨');
+		let data ={
+			content: $("#reply-content").val()
+		};
+		let boardid = $("#boardid").val();
+
+		$.ajax({
+			type:"POST",
+			url:`/api/board/${boardid}/reply`,
+			data: JSON.stringify(data), // http body데이터
+			contentType: "application/json; charset=utf-8", //body 데이터가 어떤 타입인지
+			dataType: "json" // 요청을 서버로해서 응답이 왔을 때 기본적으로 모든 것이 문자열(생긴게 json이라면)=>javascript오브젝트로 변경해줌
+			
+		}).done(function(resp){
+			alert("댓글 작성이 완료되었습니다.");
+			location.href =`/board/${boardid}`;
+		}).fail(function(error){
+			alert(JSON.stringify(error));
+		}); 
+		
+	},	
 }
 
 index.init();

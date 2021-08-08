@@ -12,9 +12,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cos.blog.model.Board;
+import com.cos.blog.model.Reply;
 import com.cos.blog.model.RoleType;
 import com.cos.blog.model.User;
 import com.cos.blog.repository.BoardRepository;
+import com.cos.blog.repository.ReplyRepository;
 import com.cos.blog.repository.UserRepository;
 
 
@@ -24,6 +26,8 @@ public class BoardService {
 	@Autowired
 	private BoardRepository boardRepository;
 	
+	@Autowired
+	private ReplyRepository replyRepository;
 	
 	@Transactional
 	public void 글쓰기(Board board,User user) {//title , content
@@ -65,5 +69,16 @@ public class BoardService {
 	public User 로그인(User user) {
 		return userRepository.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 	}*/
+	@Transactional
+	public void 댓글쓰기(User user,int boardid,Reply requestReply) {
 	
+	Board board=boardRepository.findById(boardid).orElseThrow(()->{
+		return new IllegalArgumentException("댓글 쓰기 실패 : 계시글 아이디를 찾을 수 없습니다.");
+	}); // 영속화 완료
+		
+		requestReply.setUser(user);
+		requestReply.setBoard(board);
+		
+		replyRepository.save(requestReply);
+	}
 }
