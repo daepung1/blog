@@ -70,6 +70,11 @@ public class BoardService {
 		return userRepository.findByUsernameAndPassword(user.getUsername(),user.getPassword());
 	}*/
 	@Transactional
+	public void 댓글삭제(int replyid) {
+		replyRepository.deleteById(replyid);
+	}
+	
+	@Transactional
 	public void 댓글쓰기(User user,int boardid,Reply requestReply) {
 	
 	Board board=boardRepository.findById(boardid).orElseThrow(()->{
